@@ -1,5 +1,6 @@
 package br.com.bali.code.healthcareapipackientes.Paciente.infrastructure.config;
 
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import tools.jackson.databind.ObjectMapper;
 import tools.jackson.databind.SerializationFeature;
 import tools.jackson.datatype.jsr310.JavaTimeModule;
@@ -28,7 +29,7 @@ public class RedisConfig {
     @Bean
     public ObjectMapper redisObjectMapper() {
         return new ObjectMapper()
-                .registerModule(new JavaTimeModule())
+                .registeredModules()
                 .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
     }
 

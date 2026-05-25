@@ -1,12 +1,14 @@
 package br.com.bali.code.healthcareapipackientes.Paciente.api.resource;
 
 import br.com.bali.code.healthcareapipackientes.Paciente.api.model.request.AtualizarPacienteRequest;
+import br.com.bali.code.healthcareapipackientes.Paciente.api.model.request.CriarPacienteRequest;
 import br.com.bali.code.healthcareapipackientes.Paciente.api.model.response.PacienteResponse;
 import br.com.bali.code.healthcareapipackientes.Paciente.application.StatusPaciente;
 import br.com.bali.code.healthcareapipackientes.Paciente.domain.service.PacienteService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,6 +23,14 @@ public class PacienteController {
 
     public PacienteController(PacienteService pacienteService) {
         this.pacienteService = pacienteService;
+    }
+
+
+    @PostMapping
+    @Operation(summary = "Criar paciente")
+    public ResponseEntity<PacienteResponse> criar(@RequestBody CriarPacienteRequest request) {
+        PacienteResponse paciente = pacienteService.criar(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(paciente);
     }
 
     @GetMapping("/{id}")
