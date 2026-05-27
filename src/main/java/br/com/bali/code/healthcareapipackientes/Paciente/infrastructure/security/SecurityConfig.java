@@ -62,18 +62,22 @@ public class SecurityConfig {
 
                 // ── GET por ID e CPF — qualquer profissional ─────────────
                 .requestMatchers(HttpMethod.GET, "/pacientes/{id}")
-                    .hasAnyRole("MEDICO", "ENFERMEIRO", "RECEPCIONISTA")
+                    .hasAnyRole("ADMIN", "MEDICO", "ENFERMEIRO", "RECEPCIONISTA")
 
                 .requestMatchers(HttpMethod.GET, "/pacientes/cpf/{cpf}")
-                    .hasAnyRole("MEDICO", "ENFERMEIRO", "RECEPCIONISTA")
+                    .hasAnyRole("ADMIN", "MEDICO", "ENFERMEIRO", "RECEPCIONISTA")
 
                 // ── GET por status — apenas equipe clínica ─────────────
                 .requestMatchers(HttpMethod.GET, "/pacientes")
-                    .hasAnyRole("MEDICO", "ENFERMEIRO")
+                    .hasAnyRole("ADMIN", "MEDICO", "ENFERMEIRO")
+
+                // ── POST — criar paciente ─────────────────────────────────
+                .requestMatchers(HttpMethod.POST, "/pacientes")
+                    .hasAnyRole("ADMIN", "RECEPCIONISTA")
 
                 // ── PUT — apenas quem pode alterar status clínico ────────
                 .requestMatchers(HttpMethod.PUT, "/pacientes/{id}")
-                    .hasAnyRole("MEDICO", "ENFERMEIRO")
+                    .hasAnyRole("ADMIN", "MEDICO", "ENFERMEIRO")
 
                 // ── Qualquer outra rota exige autenticação ───────────────
                 .anyRequest().authenticated()
