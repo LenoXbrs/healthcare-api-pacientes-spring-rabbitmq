@@ -1,7 +1,7 @@
 package br.com.bali.code.healthcareapipackientes.Paciente.infrastructure.integrations.rabbitmq.config;
 
 import org.springframework.amqp.core.*;
-import org.springframework.amqp.support.converter.JacksonJsonMessageConverter;
+import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -34,7 +34,7 @@ public class RabbitMQConfig {
 
 
     @Bean
-    public JacksonJsonMessageConverter jacksonJsonMessageConverter() {
-        return new JacksonJsonMessageConverter();
+    public Jackson2JsonMessageConverter jacksonJsonMessageConverter() {
+        return new Jackson2JsonMessageConverter();
     }
 }
