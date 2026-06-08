@@ -16,6 +16,8 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import java.time.Duration;
 import java.util.Map;
+import java.util.List;
+import br.com.bali.code.healthcareapipackientes.Paciente.api.model.response.PacienteResponse;
 
 @Configuration
 @EnableCaching
@@ -36,23 +38,25 @@ public class RedisConfig {
     @Bean
     public RedisCacheManager cacheManager(RedisConnectionFactory factory) {
         ObjectMapper mapper = redisObjectMapper();
-        GenericJackson2JsonRedisSerializer serializer =
-                new GenericJackson2JsonRedisSerializer(mapper);
 
         RedisCacheConfiguration base = RedisCacheConfiguration.defaultCacheConfig()
                 .serializeKeysWith(RedisSerializationContext.SerializationPair
                         .fromSerializer(new StringRedisSerializer()))
-                .serializeValuesWith(RedisSerializationContext.SerializationPair
-                        .fromSerializer(serializer))
                 .disableCachingNullValues();
+
+        var pacSerializer = new org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer<>(mapper, PacienteResponse.class);
+        var pacListSerializer = new org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer<>(mapper,
+                mapper.getTypeFactory().constructCollectionType(List.class, PacienteResponse.class));
 
         return RedisCacheManager.builder(factory)
                 .cacheDefaults(base)
                 .withInitialCacheConfigurations(Map.of(
                     // Dados de paciente por ID — muda raramente
-                    "pacientes",        base.entryTtl(Duration.ofMinutes(10)),
+                    "pacientes", base.entryTtl(Duration.ofMinutes(10))
+                        .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(pacSerializer)),
                     // Lista por status — muda conforme triagens chegam
                     "pacientes-status", base.entryTtl(Duration.ofMinutes(1))
+                        .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(pacListSerializer))
                 ))
                 .build();
     }

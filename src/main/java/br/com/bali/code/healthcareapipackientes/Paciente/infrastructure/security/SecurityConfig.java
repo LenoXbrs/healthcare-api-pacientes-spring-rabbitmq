@@ -73,7 +73,7 @@ public class SecurityConfig {
 
                 // ── POST — criar paciente ─────────────────────────────────
                 .requestMatchers(HttpMethod.POST, "/pacientes")
-                    .hasAnyRole("ADMIN", "RECEPCIONISTA")
+                    .hasAnyRole("ADMIN", "RECEPCIONISTA", "ENFERMEIRO")
 
                 // ── PUT — apenas quem pode alterar status clínico ────────
                 .requestMatchers(HttpMethod.PUT, "/pacientes/{id}")

@@ -38,8 +38,11 @@ public class GlobalExceptionHandler {
                 .body(errorBody(HttpStatus.BAD_REQUEST, ex.getMessage()));
     }
 
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, Object>> handleGeneric(Exception ex) {
+        log.error("Erro interno não tratado:", ex);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(errorBody(HttpStatus.INTERNAL_SERVER_ERROR, "Erro interno. Tente novamente."));
     }
